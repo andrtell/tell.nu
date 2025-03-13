@@ -1,0 +1,3 @@
+base.html template |
+menu.html template | base.html
+home.html template | base.html menu.html
