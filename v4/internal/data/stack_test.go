@@ -5,7 +5,7 @@ import (
 	"slices"
 )
 
-func FuzzInOut(f *testing.F) {
+func FuzzStackInOut(f *testing.F) {
 	corpus := [][]byte{
 		{}, 
 		{1},
@@ -37,7 +37,7 @@ func FuzzInOut(f *testing.F) {
 	})
 }
 
-func TestPushPop(t *testing.T) {
+func TestStackPushPop(t *testing.T) {
 	seed := []int{1, 3, 7, 21, 33, 107}
 	for _, count := range seed { 
 		s := NewStack[int]()
@@ -56,7 +56,7 @@ func TestPushPop(t *testing.T) {
 	}
 }
 
-func TestPushPeek(t *testing.T) {
+func TestStackPushPeek(t *testing.T) {
 	seed := []int{1, 3, 9, 23, 31, 99}
 	for _, count := range seed { 
 		s := NewStack[int]()
@@ -69,12 +69,12 @@ func TestPushPeek(t *testing.T) {
 	}
 }
 
-func TestPushLen(t *testing.T) {
+func TestStackPushLen(t *testing.T) {
 	seed := []int{1, 3, 7, 23, 79, 111}
 	for _, count := range seed { 
 		s := NewStack[int]()
-		for v := 0; v < count; v++ {
-			s.Push(v)
+		for i := 0; i < count; i++ {
+			s.Push(i)
 		}
 		if s.Len() != count {
 			t.Error("s.Len() =", s.Len(), "want", count)
@@ -82,7 +82,7 @@ func TestPushLen(t *testing.T) {
 	}
 }
 
-func TestPushPopOnce(t *testing.T) {
+func TestStackPushPopOnce(t *testing.T) {
 	s := NewStack[int]()
 	val := 21
 	s.Push(val)
@@ -92,7 +92,7 @@ func TestPushPopOnce(t *testing.T) {
 	}
 }
 
-func TestPushPeekOnce(t *testing.T) {
+func TestStackPushPeekOnce(t *testing.T) {
 	s := NewStack[int]()
 	val := 21
 	s.Push(val)
@@ -101,7 +101,7 @@ func TestPushPeekOnce(t *testing.T) {
 	}
 }
 
-func TestEmpty(t *testing.T) {
+func TestStackEmpty(t *testing.T) {
 	s := NewStack[int]()
 	if s.Len() != 0 {
 		t.Error("s.Len() =", s.Len(), "want 0")
@@ -111,7 +111,7 @@ func TestEmpty(t *testing.T) {
 	}
 }
 
-func TestEmptyPop(t *testing.T) {
+func TestStackEmptyPop(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {
 			t.Error("s.Pop() did not panic. Want panic.")
@@ -121,7 +121,7 @@ func TestEmptyPop(t *testing.T) {
 	s.Pop()
 }
 
-func TestEmptyPeek(t *testing.T) {
+func TestStackEmptyPeek(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {
 			t.Error("s.Peek() did not panic. Want panic.")
@@ -131,7 +131,7 @@ func TestEmptyPeek(t *testing.T) {
 	s.Peek()
 }
 
-func TestNilEmpty(t *testing.T) {
+func TestStackNilEmpty(t *testing.T) {
 	var s *Stack[int]
 
 	if s.Len() != 0 {
@@ -143,7 +143,7 @@ func TestNilEmpty(t *testing.T) {
 	}
 }
 
-func TestNilPush(t *testing.T) {
+func TestStackNilPush(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {
 			t.Error("Push() did not panic. Want panic.")
@@ -153,7 +153,7 @@ func TestNilPush(t *testing.T) {
 	s.Push(1)
 }
 
-func TestNilPop(t *testing.T) {
+func TestStackNilPop(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {
 			t.Error("s.Pop() did not panic. Want panic.")
@@ -163,7 +163,7 @@ func TestNilPop(t *testing.T) {
 	s.Pop()
 }
 
-func TestNilPeek(t *testing.T) {
+func TestStackNilPeek(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {
 			t.Error("s.Peek() did not panic. Want panic.")
