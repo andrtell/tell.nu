@@ -5,7 +5,7 @@ import (
 	"slices"
 )
 
-func Fuzz10PushPop(f *testing.F) {
+func FuzzInOut(f *testing.F) {
 	corpus := [][]byte{
 		{}, 
 		{1},
@@ -28,58 +28,61 @@ func Fuzz10PushPop(f *testing.F) {
 		for !s.Empty() {
 			output = append(output, s.Pop())
 		}
-		slices.Reverse(output)	
-		if slices.Compare(input, output) != 0 {
-			t.Error("got", output, "want", input)
+		reversed := make([]byte, len(input))
+		copy(reversed, input)
+		slices.Reverse(reversed)	
+		if slices.Compare(output, reversed) != 0 {
+			t.Error("given", input, "got", output, "want", reversed)
+		}
+	})
+}
+
+func TestPushPop(t *testing.T) {
+	seed := []int{1, 3, 7, 21, 33, 107}
+	for _, count := range seed { 
+		s := NewStack[int]()
+		for i := 0; i < count; i++ {
+			s.Push(i)
+		}
+		for i := count - 1; i >= 0; i-- {
+			v := s.Pop()
+			if v != i {
+				t.Error("s.Pop() =", v, "want", i)
+			}
 		}
 		if s.Len() != 0 {
 			t.Error("s.Len() =", s.Len(), "want", 0)
 		}
-	})
-}
-
-func TestPushPopEmpty(t *testing.T) {
-	s := NewStack[int]()
-	times := 21
-	for v := 0; v < times; v++ {
-		s.Push(v)
-	}
-	for v := 0; v < times; v++ {
-		s.Pop()
-	}
-	if s.Len() != 0 {
-		t.Error("s.Len() =", s.Len(), "want", 0)
 	}
 }
 
-func Fuzz20PushLen(f *testing.F) {
-	corpus := []uint{0, 1, 3, 4, 5, 8, 9, 15, 16, 17, 32, 33}
-	for _, seed := range corpus {
-		f.Add(seed)
-	}
-	f.Fuzz(func(t *testing.T, count uint) {
-		s := NewStack[uint]()
-		for i := uint(0); i < count; i++ {
+func TestPushPeek(t *testing.T) {
+	seed := []int{1, 3, 9, 23, 31, 99}
+	for _, count := range seed { 
+		s := NewStack[int]()
+		for i := 0; i < count; i++ {
 			s.Push(i)
+			if s.Peek() != i {
+				t.Error("s.Peek() =", s.Peek(), "want", i)
+			}
 		}
-		if s.Len() != int(count) {
-			t.Error("s.Len() =", s.Len(), "want", count)
-		}
-	})
+	}
 }
 
 func TestPushLen(t *testing.T) {
-	s := NewStack[int]()
-	count := 21
-	for v := 0; v < count; v++ {
-		s.Push(v)
-	}
-	if s.Len() != count {
-		t.Error("s.Len() =", s.Len(), "want", count)
+	seed := []int{1, 3, 7, 23, 79, 111}
+	for _, count := range seed { 
+		s := NewStack[int]()
+		for v := 0; v < count; v++ {
+			s.Push(v)
+		}
+		if s.Len() != count {
+			t.Error("s.Len() =", s.Len(), "want", count)
+		}
 	}
 }
 
-func TestPushPop(t *testing.T) {
+func TestPushPopOnce(t *testing.T) {
 	s := NewStack[int]()
 	val := 21
 	s.Push(val)
@@ -89,7 +92,7 @@ func TestPushPop(t *testing.T) {
 	}
 }
 
-func TestPushPeek(t *testing.T) {
+func TestPushPeekOnce(t *testing.T) {
 	s := NewStack[int]()
 	val := 21
 	s.Push(val)
