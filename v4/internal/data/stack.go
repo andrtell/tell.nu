@@ -29,7 +29,7 @@ func (s *Stack[T]) Empty() bool {
 
 func (s *Stack[T]) Push(item T) {
 	if s == nil {
-		panic("Stack: called Push on nil stack.")
+		panic("Stack: called Push on nil.")
 	}
 	if s.full() {
 		s.grow()
