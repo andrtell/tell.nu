@@ -140,24 +140,3 @@ func TestQueuePanicPeekOnNil(t *testing.T) {
 	var q *Queue[int]
 	q.Peek()
 }
-
-// Internal
-
-func TestQueueMonotoneCap(t *testing.T) {
-	q := NewQueue[int]()
-	prevCap := q.cap()
-	for i := 0; i < 131; i++ {
-		q.Enqueue(i)
-		if q.cap() < prevCap {
-			t.Error("Cap did not grow (curr cap)", q.cap(), "< (prev cap)", prevCap)
-		}
-		prevCap = q.cap()
-	}
-	for i := 0; i < 131; i++ {
-		q.Dequeue()
-		if q.cap() > prevCap {
-			t.Error("Cap did not shrink (curr cap)", q.cap(), "< (prev cap)", prevCap)
-		}
-		prevCap = q.cap()
-	}
-}

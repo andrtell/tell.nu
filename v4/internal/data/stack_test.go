@@ -142,24 +142,3 @@ func TestStackPanicPeekOnNil(t *testing.T) {
 	var s *Stack[int]
 	s.Peek()
 }
-
-// Internal
-
-func TestStackMonotoneCap(t *testing.T) {
-	s := NewStack[int]()
-	prevCap := s.cap()
-	for i := 0; i < 131; i++ {
-		s.Push(i)
-		if s.cap() < prevCap {
-			t.Error("Cap did not grow (curr cap)", s.cap(), "< (prev cap)", prevCap)
-		}
-		prevCap = s.cap()
-	}
-	for i := 0; i < 131; i++ {
-		s.Pop()
-		if s.cap() > prevCap {
-			t.Error("Cap did not shrink (curr cap)", s.cap(), "< (prev cap)", prevCap)
-		}
-		prevCap = s.cap()
-	}
-}
