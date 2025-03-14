@@ -50,7 +50,7 @@ func (q *Queue[T]) Enqueue(item T) {
 
 func (q *Queue[T]) Dequeue() T {
 	if q.Empty() {
-		panic("Queue: Dequeue called on empty queue.")
+		panic("Queue: called Dequeue on empty queue.")
 	}
 	if q.underused() {
 		q.shrink()
